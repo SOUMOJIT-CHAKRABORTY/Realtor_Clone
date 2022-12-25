@@ -3,6 +3,8 @@ import { useState } from 'react'
 import {AiFillEye , AiFillEyeInvisible} from "react-icons/ai"
 import {Link} from 'react-router-dom'
 import OAuth from '../components/OAuth';
+import {getAuth , createUserWithEmailAndPassword , updateProfile} from "firebase/auth"
+import {db} from "../firebase"
 
 export default function SignUp() {
   const [showPassword , setShowPassword] = useState(false);
@@ -20,6 +22,21 @@ export default function SignUp() {
       [e.target.id]: e.target.value,
     }));
   }
+  async function onSubmit(e) {
+    e.preventDefault();
+
+    try {
+      const auth = getAuth()
+      const userCredentials = await createUserWithEmailAndPassword(auth, email , password)
+      updateProfile(auth.currentUser , {
+        displayName : name
+      })
+      const user = userCredentials.user
+      console.log(user)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <section>
       <h1 className='text-3xl mt-6 font-bold'>Sign Up</h1>
@@ -28,7 +45,7 @@ export default function SignUp() {
         <img src="https://images.unsplash.com/flagged/photo-1564767609342-620cb19b2357?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1673&q=80" alt="Sign In"  className='w-full rounded-2xl'/>
       </div>
       <div className='w-full md:w-[67%] lg:w-[40%] lg:ml-20'>
-        <form >
+        <form onSubmit={onSubmit}>
         <input type="text" className='w-full px-4 py-2 mb-6 text-xl text-gray-700 bg-white border-grey-300 rounded transition ease-in-out' id='name' value={name} onChange = {onChange} placeholder="Full Name" />
           <input type="email" className='w-full px-4 py-2 mb-6 text-xl text-gray-700 bg-white border-grey-300 rounded transition ease-in-out' id='email' value={email} onChange = {onChange} placeholder="Email address" />
           <div className='mb-6 relative'>
