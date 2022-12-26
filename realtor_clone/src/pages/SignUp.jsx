@@ -1,10 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {AiFillEye , AiFillEyeInvisible} from "react-icons/ai"
 import {Link} from 'react-router-dom'
 import OAuth from '../components/OAuth';
 import {getAuth , createUserWithEmailAndPassword , updateProfile} from "firebase/auth"
 import {db} from "../firebase"
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { toast } from 'react-toastify'
 
 export default function SignUp() {
   const [showPassword , setShowPassword] = useState(false);
@@ -22,6 +25,9 @@ export default function SignUp() {
       [e.target.id]: e.target.value,
     }));
   }
+
+  const navigate = useNavigate();
+
   async function onSubmit(e) {
     e.preventDefault();
 
@@ -32,9 +38,16 @@ export default function SignUp() {
         displayName : name
       })
       const user = userCredentials.user
-      console.log(user)
+      const formDataCopy = {...formData}
+      delete formData.password
+      formDataCopy.timeStamp = serverTimestamp();
+
+      await setDoc(doc(db, "users", user.uid) ,formDataCopy)
+      toast.success("Completed")
+      navigate("/")
+    
     } catch (error) {
-      console.log(error)
+      toast.error("Something went wrong with the registration");
     }
   }
   return (
