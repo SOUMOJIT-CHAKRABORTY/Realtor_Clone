@@ -1,3 +1,3 @@
 # Realtor_Clone
 
-Using ReactJs and Tailwind.
+Using ReactJs and Tailwind CSS.
