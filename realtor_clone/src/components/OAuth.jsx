@@ -1,10 +1,14 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import {doc,getDoc, setDoc } from 'firebase/firestore'
+import {doc,getDoc, serverTimestamp, setDoc } from 'firebase/firestore'
 import React from 'react'
 import{FcGoogle} from 'react-icons/fc'
+import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import { db } from '../firebase'
 export default function OAuth() {
+
+  const navigate = useNavigate();
+
   async function onGoogleClick() {
     try {
       const auth = getAuth()
@@ -23,10 +27,11 @@ export default function OAuth() {
         await setDoc(docRef, {
           name: user.displayName,
           email: user.email,
-          timeStamp: user.timeStamp
+          timeStamp: serverTimestamp()
         });
       }
-
+      navigate("/")
+      
     } catch (error) {
       toast.error("Could not complete sign up with Google")
       console.log(error)
