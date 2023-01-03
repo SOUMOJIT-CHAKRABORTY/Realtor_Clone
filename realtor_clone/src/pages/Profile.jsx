@@ -15,7 +15,10 @@ export default function Profile() {
       <h1 className='text-3xl font-bold mt-6'>My Profile</h1>
       <div className=' w-full md:w-[50%] mt-6 px-3'>
         <form>
+          {/* Name */}
           <input type="text" id='name' value={name} className="mb-6 w-full rounded py-2 px-4 text-gray-700 text-xl bg-white border border-gray-300 transition ease-in-out " />
+
+          {/* Email */}
           <input type="email" id='email' value={email} className="mb-6 w-full rounded py-2 px-4 text-gray-700 text-xl bg-white border border-gray-300 transition ease-in-out " />
 
       <div className='flex justify-between whitespace-nowrap text-sm sm:text-lg mb-6'>
