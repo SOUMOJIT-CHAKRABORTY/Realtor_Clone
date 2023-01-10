@@ -12,8 +12,8 @@ export default function CreateListing() {
     address: "",
     description: "",
     offer: false,
-    regularPrice: "",
-    discountedPrice: "",
+    regularPrice: 0,
+    discountedPrice: 0,
   });
   const {
     type,
@@ -28,7 +28,31 @@ export default function CreateListing() {
     regularPrice,
     discountedPrice,
   } = formData;
-  function onChange() {}
+  function onChange(e) {
+    let boolean = null;
+    if (e.target.value === "false") {
+      boolean = false;
+    }
+    if (e.target.value === "true") {
+      boolean = true;
+    }
+    // For Files
+
+    if (e.target.files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        images: e.target.value,
+      }));
+    }
+    // For Text / Booleans / Numbers
+
+    if (!e.target.files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [e.target.id]: boolean ?? e.target.value,
+      }));
+    }
+  }
   return (
     <main className="mx-auto px-2 max-w-md">
       <h1 className="text-3xl font-bold mt-6">Create a Listing</h1>
@@ -82,7 +106,7 @@ export default function CreateListing() {
                 type="number"
                 id="bedrooms"
                 value={bedrooms}
-                onChang={onChange}
+                onChange={onChange}
                 min="1"
                 max="50"
                 required
@@ -95,9 +119,9 @@ export default function CreateListing() {
             <section className="">
               <input
                 type="number"
-                id="bedrooms"
+                id="bathrooms"
                 value={bathrooms}
-                onChang={onChange}
+                onChange={onChange}
                 min="1"
                 max="50"
                 required
@@ -207,8 +231,8 @@ export default function CreateListing() {
                 type="number"
                 id="regularPrice"
                 value={regularPrice}
-                onChang={onChange}
-                min="100"
+                onChange={onChange}
+                min="10"
                 max="50000000"
                 required
                 className="w-full text-gray-700 border border-gray-300 text-xl rounded focus:bg-white px-4 py-2 bg-white focus:border-slate-600 text-center"
@@ -230,8 +254,8 @@ export default function CreateListing() {
                   type="number"
                   id="discountedPrice"
                   value={discountedPrice}
-                  onChang={onChange}
-                  min="100"
+                  onChange={onChange}
+                  min="10"
                   max="50000000"
                   required={offer}
                   className="w-full text-gray-700 border border-gray-300 text-xl rounded focus:bg-white px-4 py-2 bg-white focus:border-slate-600 text-center"
