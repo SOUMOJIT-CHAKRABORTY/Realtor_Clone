@@ -1,7 +1,11 @@
 import React from "react";
 import { useState } from "react";
+import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
 
 export default function CreateListing() {
+  const [geolocationEnabled, setGeolocationEnabled] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: "rent",
     name: "",
@@ -14,6 +18,9 @@ export default function CreateListing() {
     offer: false,
     regularPrice: 0,
     discountedPrice: 0,
+    latitude: 0,
+    longitude: 0,
+    images: {},
   });
   const {
     type,
@@ -27,6 +34,9 @@ export default function CreateListing() {
     offer,
     regularPrice,
     discountedPrice,
+    latitude,
+    longitude,
+    images,
   } = formData;
   function onChange(e) {
     let boolean = null;
@@ -53,10 +63,29 @@ export default function CreateListing() {
       }));
     }
   }
+  function onSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    if (discountedPrice >= regularPrice) {
+      setLoading(false);
+      toast.error("Discounted price should be less than Regular price");
+      return;
+    }
+
+    if (images.length > 6) {
+      setLoading(false);
+      toast.error("Maximum 6 images are allowed");
+      return;
+    }
+  }
+
+  if (loading) {
+    return <Spinner />;
+  }
   return (
     <main className="mx-auto px-2 max-w-md">
       <h1 className="text-3xl font-bold mt-6">Create a Listing</h1>
-      <form className="">
+      <form onSubmit={onSubmit} className="">
         <p className="text-left mt-6 font-semibold text-lg">Sell/Rent</p>
         <div className="flex mb-6">
           <button
@@ -188,6 +217,34 @@ export default function CreateListing() {
             className="w-full text-xl border border-gray-300 bg-white rounded text:sm text-gray-700 focus:bg-white focus:text-gray-700 focus:border-slate-600"
           ></textarea>
         </section>
+        <div className="text-left mb-6 flex space-x-6">
+          <div>
+            <p className="text-lg font-semibold">Latitude</p>
+            <input
+              type="number"
+              id="latitude"
+              value={latitude}
+              onChange={onChange}
+              required
+              min="-90"
+              max="90"
+              className="w-full text-gray-700 border border-gray-300 text-xl rounded focus:bg-white px-4 py-2 bg-white focus:border-slate-600 text-center"
+            />
+          </div>
+          <div>
+            <p className="text-lg font-semibold">Longitude</p>
+            <input
+              type="number"
+              id="longitude"
+              value={longitude}
+              onChange={onChange}
+              required
+              min="-180"
+              max="180"
+              className="w-full text-gray-700 border border-gray-300 text-xl rounded focus:bg-white px-4 py-2 bg-white focus:border-slate-600 text-center"
+            />
+          </div>
+        </div>
         <section className="text-left mb-6">
           <p className="font-semibold text-lg">Description</p>
           <textarea
