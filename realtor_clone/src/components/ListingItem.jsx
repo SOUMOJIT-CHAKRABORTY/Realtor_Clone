@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Moment from "react-moment";
-import { MdLocationOn } from "react-icons/md";
+import { MdLocationOn, MdEdit } from "react-icons/md";
+import { FaTrash } from "react-icons/fa";
 
-export default function ListingItem({ listing, id }) {
+export default function ListingItem({ listing, id, onDelete, onEdit }) {
   return (
     <li className="relative bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-150 m-[10px]">
       <Link className="contents" to={`/category/${listing.type}/${id}`}>
@@ -28,8 +29,15 @@ export default function ListingItem({ listing, id }) {
           </div>
           <p className="font-semibold text-lg m-0 truncate">{listing.name}</p>
           <p className="text-[#457b9d] mt-2 font-semibold">
-            ${listing.offer ? listing.discountedPrice : listing.regularPrice}
-            {listing.type == "rent" && " / month"}
+            $
+            {listing.offer
+              ? listing.discountedPrice
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              : listing.regularPrice
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            {listing.type === "rent" && " / month"}
           </p>
 
           <div className="flex space-x-3 mt-[10px] items-center">
@@ -48,6 +56,18 @@ export default function ListingItem({ listing, id }) {
           </div>
         </div>
       </Link>
+      {onDelete && (
+        <FaTrash
+          className="absolute bottom-2 right-2 cursor-pointer h-[14px] text-red-500"
+          onClick={() => onDelete(id)}
+        />
+      )}
+      {onEdit && (
+        <MdEdit
+          className="absolute bottom-2 right-7 h-4 cursor-pointer"
+          onClick={() => onEdit(listing.id)}
+        />
+      )}
     </li>
   );
 }
