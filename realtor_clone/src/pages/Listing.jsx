@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
 import {
   FaShare,
   FaMapMarkerAlt,
@@ -21,12 +22,16 @@ import SwiperCore, {
   Pagination,
 } from "swiper";
 import "swiper/css/bundle";
+import Contact from "../components/Contact";
 
 export default function Listing() {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
+  const [contactLandlord, setContactLandlord] = useState(false);
   SwiperCore.use([Autoplay, Navigation, Pagination]);
+
+  const auth = getAuth();
 
   const params = useParams();
 
@@ -85,8 +90,8 @@ export default function Listing() {
         </p>
       )}
 
-      <div className="flex flex-col md:flex-row bg-white max-w-6xl lg:mx-auto p-4 rounded-lg lg:space-x-5 text-left">
-        <div className="w-full h-[200px] lg-[400px]">
+      <div className="flex flex-col md:flex-row bg-white max-w-6xl lg:mx-auto p-4 rounded-lg lg:space-x-5 text-left shadow-md mt-6">
+        <div className="w-full">
           <p className="text-2xl font-bold mb-5 text-blue-900">
             {listing.name} - ${" "}
             {listing.offer
@@ -117,7 +122,7 @@ export default function Listing() {
             <span className="font-semibold">Description - </span>
             {listing.description}
           </p>
-          <ul className="flex items-center space-x-2 sm:space-x-10 text-sm font-semibold">
+          <ul className="flex items-center space-x-2 sm:space-x-10 text-sm font-semibold mb-6">
             <li className="flex items-center whitespace-nowrap">
               <FaBed className="text-lg mr-1" />
               {listing.bedrooms > 1 ? `${listing.bedrooms} Beds` : "1 Bed"}
@@ -135,6 +140,19 @@ export default function Listing() {
               {listing.furnished ? `Furnished` : "Not Furnished"}
             </li>
           </ul>
+          {listing.userRef !== auth.currentUser?.uid && !contactLandlord && (
+            <div className="mt-4">
+              <button
+                onClick={() => setContactLandlord(true)}
+                className="py-3 px-2 bg-blue-600 hover:bg-blue-700 text-white font-medium uppercase text-sm shadow-md focus:bg-blue-700 cursor-pointer hover:shadow-lg focus:shadow-lg w-full text-center transition duration-150 ease-in-out"
+              >
+                Contact Landlord
+              </button>
+            </div>
+          )}
+          {contactLandlord && (
+            <Contact userRef={listing.userRef} listing={listing} />
+          )}
         </div>
         <div className="bg-blue-400 w-full h-[200px]"></div>
       </div>
