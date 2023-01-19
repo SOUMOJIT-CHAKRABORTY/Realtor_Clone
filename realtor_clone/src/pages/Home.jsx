@@ -79,6 +79,38 @@ export default function Home() {
     }
     fetchListings();
   });
+  // Places for Sale
+  const [saleListing, setSaleListing] = useState(null);
+
+  useEffect(() => {
+    async function fetchListings() {
+      try {
+        // get reference
+        const listingRef = collection(db, "listings");
+        // creating query
+        const q = query(
+          listingRef,
+          where("type", "==", "sale"),
+          orderBy("timestamp", "desc"),
+          limit(4)
+        );
+        // executing query
+        const docSnap = await getDocs(q);
+        const listings = [];
+
+        docSnap.forEach((doc) => {
+          listings.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        setSaleListing(listings);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchListings();
+  });
 
   return (
     <div>
@@ -94,6 +126,50 @@ export default function Home() {
             </Link>
             <ul className="sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
               {offerListing.map((listing) => (
+                <ListingItem
+                  key={listing.id}
+                  listing={listing.data}
+                  id={listing.id}
+                />
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+      <div className="max-w-6xl mx-auto pt-4 space-y-6 text-left">
+        {rentListing && rentListing.length > 1 && (
+          <div className="m-2 mb-6">
+            <h2 className="px-3 text-2xl mt-6 font-semibold">
+              Places for Rent
+            </h2>
+            <Link to="/offers">
+              <p className="px-3 text-sm text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out">
+                Show more places for rent
+              </p>
+            </Link>
+            <ul className="sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
+              {rentListing.map((listing) => (
+                <ListingItem
+                  key={listing.id}
+                  listing={listing.data}
+                  id={listing.id}
+                />
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+      <div className="max-w-6xl mx-auto pt-4 space-y-6 text-left">
+        {saleListing && saleListing.length > 1 && (
+          <div className="m-2 mb-6">
+            <h2 className="px-3 text-2xl mt-6 font-semibold">Places on Sale</h2>
+            <Link to="/offers">
+              <p className="px-3 text-sm text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out">
+                Show more places for rent
+              </p>
+            </Link>
+            <ul className="sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
+              {saleListing.map((listing) => (
                 <ListingItem
                   key={listing.id}
                   listing={listing.data}
