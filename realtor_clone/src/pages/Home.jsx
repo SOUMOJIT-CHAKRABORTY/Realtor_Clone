@@ -116,7 +116,7 @@ export default function Home() {
     <div>
       <Slider />
       <div className="max-w-6xl mx-auto pt-4 space-y-6 text-left">
-        {offerListing && offerListing.length > 1 && (
+        {offerListing && offerListing.length > 0 && (
           <div className="m-2 mb-6">
             <h2 className="px-3 text-2xl mt-6 font-semibold">Recent Offers</h2>
             <Link to="/offers">
@@ -137,7 +137,7 @@ export default function Home() {
         )}
       </div>
       <div className="max-w-6xl mx-auto pt-4 space-y-6 text-left">
-        {rentListing && rentListing.length > 1 && (
+        {rentListing && rentListing.length > 0 && (
           <div className="m-2 mb-6">
             <h2 className="px-3 text-2xl mt-6 font-semibold">
               Places for Rent
@@ -160,7 +160,7 @@ export default function Home() {
         )}
       </div>
       <div className="max-w-6xl mx-auto pt-4 space-y-6 text-left">
-        {saleListing && saleListing.length > 1 && (
+        {saleListing && saleListing.length > 0 && (
           <div className="m-2 mb-6">
             <h2 className="px-3 text-2xl mt-6 font-semibold">Places on Sale</h2>
             <Link to="/offers">
