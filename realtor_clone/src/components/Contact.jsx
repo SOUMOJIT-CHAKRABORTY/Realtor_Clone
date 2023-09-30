@@ -28,7 +28,7 @@ export default function Contact({ userRef, listing }) {
   }, [userRef]);
 
   return (
-    <>
+    <section>
       {landlord !== null && (
         <div className="flex flex-col">
           <p>
@@ -56,6 +56,6 @@ export default function Contact({ userRef, listing }) {
           </div>
         </div>
       )}
-    </>
+    </section>
   );
 }
